@@ -109,6 +109,7 @@ if __name__ == '__main__':
     t=open("tweet.txt", "r")
     l=t.read()
     gan=GAN(l)
-    print(gan.training()[0])
-    score = sentence_bleu(l, gan.training()[0])
+    tweet=gan.entrainer()[0]
+    print(tweet)
+    score = sentence_bleu(l, tweet)
     print(score)
