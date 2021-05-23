@@ -111,5 +111,15 @@ if __name__ == '__main__':
     gan=GAN(l)
     tweet=gan.entrainer()[0]
     print(tweet)
-    score = sentence_bleu(l, tweet)
-    print(score)
+    list_listword=[]
+    list_tweets = l.split('\n')
+    for i in range(0, len(list_tweets)):
+        list_listword.append(list_tweets[i].split())
+    twt=tweet.split('\n')
+    ltw=[]
+    for i in range(0, len(twt)):
+        ltw.append(twt[i].split())
+    print('Cumulative 1-gram: %f' % sentence_bleu(list_listword, ltw[0], weights=(1, 0, 0, 0)))
+    print('Cumulative 2-gram: %f' % sentence_bleu(list_listword, ltw[0], weights=(0.5, 0.5, 0, 0)))
+    print('Cumulative 3-gram: %f' % sentence_bleu(list_listword, ltw[0], weights=(0.33, 0.33, 0.33, 0)))
+    print('Cumulative 4-gram: %f' % sentence_bleu(list_listword, ltw[0], weights=(0.25, 0.25, 0.25, 0.25)))
