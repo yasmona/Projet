@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+  #dropFileForm {
+  margin: 16px;
+  text-align: center;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: 0.5s;
+  box-shadow: 0 0 16px #008CBA;
+  width: 40%;
+  margin-top: 80px;
+ margin-bottom: 100px;
+ margin-left: 360px;
+ margin-right: 50px;
+ height: 450px;
+ background: repeating-linear-gradient(
+    40deg,
+    transparent,
+    transparent 5%,
+    black 5%,
+    black 10%
+  );
+}
+
+
+#fileLabelText{
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  background-color: #008CBA;
+  width: 100%;
+  color:white;
+
+}
+
+
+#dropFileForm.fileHover {
+  box-shadow: 0 0 50px #8B008B;
+  background: repeating-linear-gradient(
+    40deg,
+    transparent,
+    transparent 5%,
+    purple 5%,
+    black 10%
+  );
+}
+
+
+.hideButTakeUpSpace {
+    margin-top: 15px;
+    width: 90%;
+    height: 60px;
+   border: none;
+   box-shadow: 0 0 16px #008CBA;
+   border-radius: 8px;
+    
+        }
+.affiche{
+border-radius: 8px;
+  background-color: white;
+  margin-top: 15px;
+  width:90%;
+  font-family: 'Arial', sans-serif;
+  height: 120px;
+  border:none;
+  box-shadow: 0 0 16px #008CBA;
+
+}
+.button{
+  background-color: #008CBA;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size:15px;
+  width:90%;
+  font-family: 'Arial', sans-serif;
+  height:40px;
+  margin-top: 10px;
+
+              
+
+}
+input{
+ 
+  background-color: #008CBA;
+  display: block;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  height: 150px;
+  width: 100%;
+  color: black;
+  margin-top: -37px;
+
+}
+body{
+  background-image: url({{url_for('static', filename='tweet.jpg')}})
+}
+</style>
+</head>
+<body style="background-image:{{url_for('static', filename='tweet.jpg')}};">
+    <form id="dropFileForm" action="{{ url_for('home') }}" enctype="multipart/form-data" method='POST'>
+      <div>
+        <input type="file" name="files[]" id="fileInput" multiple ondragover="fileHover();" ondragleave="fileHoverEnd();" ondrop="fileHoverEnd();" onclick="fileHover();" onchange="fileHoverEnd()">
+        <label for="fileInput" id="fileLabel" ondragover="overrideDefault(event);fileHover();" ondragenter="overrideDefault(event);fileHover();" ondragleave="overrideDefault(event);fileHoverEnd();" ondrop="overrideDefault(event);fileHoverEnd(); 
+        addFiles(event);">
+        <span  id="fileLabelText">Choisir un fichier ou deposer le ici</span>
+       </label>
+        <textarea class="affiche"  name="ancien" id="tweet">{% if text %} {{text}} {% endif %}</textarea>
+        <input type="submit"  class="button" value="Prédire un nouveau tweet" >
+        <textarea class="hideButTakeUpSpace"  name="nouveau" id="predic">{% if tweet %} {{tweet}} {% endif %}</textarea>
+     </div>
+  </form>
+    <script >
+
+ let input = document.querySelector('input');
+let textarea = document.querySelector('textarea');
+ 
+input.addEventListener('change', () => {
+    let files = input.files;
+ 
+    if(files.length == 0) return;
+ 
+    const file = files[0];
+ 
+    let reader = new FileReader();
+ 
+    reader.onload = (e) => {
+        const file = e.target.result;
+        const lines = file.split(/\r\n|\n/);
+        textarea.value = lines.join('\n');
+    };
+ 
+    reader.onerror = (e) => alert(e.target.error.name);
+ 
+    reader.readAsText(file);
+    
+});
+var dropFileForm = document.getElementById("dropFileForm");
+var uploadStatus = document.getElementById("uploadStatus");
+var fileInput = document.getElementById("fileInput");
+var droppedFiles;
+
+function overrideDefault(event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+function fileHover() {
+  dropFileForm.classList.add("fileHover");
+}
+
+function fileHoverEnd() {
+  dropFileForm.classList.remove("fileHover");
+}
+
+
+    </script>
+</body>
+</html>
